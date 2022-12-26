@@ -18,6 +18,25 @@ LPSTR pUserData;
 
 #define SERVICE_NAME	const_cast<LPWSTR>(_T("MyServiceName"))
 
+
+int _tmain(int argc, TCHAR* argv[])
+{
+	SERVICE_TABLE_ENTRY ServiceTable[] =
+	{
+		{SERVICE_NAME, (LPSERVICE_MAIN_FUNCTION)ServiceMain},
+		{NULL, NULL}
+	};
+
+	if (StartServiceCtrlDispatcher(ServiceTable) == FALSE)
+	{
+		//PLOG_ERROR << "Start returned error. Exiting...";
+		return GetLastError();
+	}
+	return NO_ERROR;
+}
+
+
+
 VOID WINAPI ServiceMain(DWORD argc, LPTSTR* argv)
 {
 	DWORD Status = E_FAIL;
@@ -204,21 +223,4 @@ DWORD WINAPI ServiceWorkerThread(LPVOID lpParam)
 	return NO_ERROR;
 }
 
-
-
-int _tmain(int argc, TCHAR* argv[])
-{
-	SERVICE_TABLE_ENTRY ServiceTable[] =
-	{
-		{SERVICE_NAME, (LPSERVICE_MAIN_FUNCTION)ServiceMain},
-		{NULL, NULL}
-	};
-
-	if (StartServiceCtrlDispatcher(ServiceTable) == FALSE)
-	{
-		//PLOG_ERROR << "Start returned error. Exiting...";
-		return GetLastError();
-	}
-	return NO_ERROR;
-}
 
